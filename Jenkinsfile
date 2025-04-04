@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        PATH = "/usr/Users/luizaugustogrein/.nvm/versions/node/v20.11.1/bin:$PATH"
+        PATH = "C:/Program Files/nodejs/;${env.PATH}"
     }
     stages {
         stage('checkout') {
@@ -11,31 +11,33 @@ pipeline {
         }
         stage('install') {
             steps {
-                sh 'npm install'
+                bat 'npm install'
             }
         }
         stage('build') {
             steps {
-                sh 'npm run build'
+                bat 'npm run build'
             }
         }
         stage('test') {
             steps {
-                sh 'npm run test'
+                bat 'npm run test'
             }
         }
         stage('build image') {
             steps {
-                sh 'docker build -t nestjs-server:1.0 .'
+                bat 'docker build -t nestjs-server:1.0 .'
             }
         }
         stage('docker push') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'docker_cred', passwordVariable: 'DOCKERHUB_PASSWORD', usernameVariable: 'DOCKERHUB_USERNAME')]) {
-                    sh 'docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD'
-                    sh 'docker tag nestjs-server:1.0 {IMAGEM_DOCKER}'
-                    sh 'docker push {IMAGEM_DOCKER}'
-                    sh 'docker logout'
+                    bat """
+                        docker login -u %DOCKERHUB_USERNAME% -p %DOCKERHUB_PASSWORD%
+                        docker tag nestjs-server:1.0 %DOCKERHUB_USERNAME%/nestjs-server:1.0
+                        docker push %DOCKERHUB_USERNAME%/nestjs-server:1.0
+                        docker logout
+                    """
                 }
             }
         }

@@ -1,7 +1,7 @@
 version: '3'
 services:
  nestjs:
-   image: {USUARIO_DOCKER}/nestjs-server:1.0
+   image: nicolas290/nestjs-server:1.0
    restart: always
    ports:
      - "3000:3000"
