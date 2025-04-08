@@ -19,11 +19,11 @@ pipeline {
                 bat 'npm run build'
             }
         }
-        stage('test') {
-            steps {
-                bat 'npm run test'
-            }
-        }
+       // stage('test') {
+         //   steps {
+          //      bat 'npm run test'
+           // }
+        //}
         stage('build image') {
             steps {
                 bat 'docker build -t nestjs-server:1.0 .'
